@@ -1,0 +1,29 @@
+<ion-view view-title="Discussion">
+	<ion-content class="padding">
+		<div class="item item-input-inset">
+			<a class="button icon ion-chevron-left" style="margin-right: 10px;" ng-click="changeDate('prev')"></a>
+			<label class="item-input-wrapper padding">
+				<input type="date" ng-change="changeDate(tabdate)" ng-model="tabdate" placeholder="Date" />
+			</label>
+			<a class="button icon ion-chevron-right" ng-click="changeDate('next')"></a>
+		</div>
+		
+		<h4>Daily Discussion: {{ data.badgeCount }}</h4>
+		<div ng-repeat="comment in dailyComments.data.comments">
+			<div class="item item-thumbnail-left">
+			<img ng-src="{{comment.avatar_url}}" />
+			<b>{{comment.display_name}}</b>
+			<p>{{comment.comment}}</p>
+			</div>
+		</div>
+		
+		<div class="list list-inset padding-top">
+			<form>
+				<label for="new_comment" class="item item-input">
+					<textarea placeholder="Comments" ng-model="new_comment"></textarea>
+				</label>
+				<button type="button" ng-click="addComment(new_comment)" class="button button-block button-balanced">Submit</button>
+			</form>
+		</div>
+	</ion-content>
+</ion-view>

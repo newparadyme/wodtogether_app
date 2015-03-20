@@ -1,0 +1,25 @@
+<ion-view view-title="WODs">
+	<ion-content class="padding">
+		
+		<div class="item item-input-inset">
+			<a class="button icon ion-chevron-left" style="margin-right: 10px;" ng-click="changeDate('prev')"></a>
+			<label class="item-input-wrapper padding">
+				<input type="date" ng-change="changeDate(tabdate)" ng-model="tabdate" placeholder="Date" />
+			</label>
+			<a class="button icon ion-chevron-right" ng-click="changeDate('next')"></a>
+		</div>
+
+		<div class="card" ng-repeat="(wbid, whiteboard) in wodsSelect.data.wods">
+			<div class="item item-divider">
+				{{whiteboard.program_name}}
+			</div>
+			<div class="item item-text-wrap">
+				<div ng-repeat="wod in whiteboard.workouts">
+					<h3>{{wod.workout_name}}</h3>
+					<p style="white-space: pre-line; margin-bottom: 12px;">{{ (wod.templates.display_rx) ? wod.templates.display_rx : wod.templates.male_rx }}</p>
+				</div>
+			</div>
+		</div>
+    
+	</ion-content>
+</ion-view>

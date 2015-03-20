@@ -1,0 +1,24 @@
+<ion-view view-title="Login">
+	<ion-content class="padding">
+		<div class="list card">
+			<div class="item item-divider">Login</div>
+			<div class="item item-body">
+				<div>
+					<div class="list list-inset">
+						<label class="item item-input">
+							<input ng-model="email" type="email" placeholder="Email Address" />
+						</label>
+						<label class="item item-input">
+							<input ng-model="password" type="password" placeholder="Password" />
+						</label>
+					</div>
+					<div class="padding">
+						<button ng-click="login(email, password)" class="button button-block button-stable">Sign In</button>
+					</div>
+					
+					<p ng-if="error">Error: <strong>{{ error }}</strong></p>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>
