@@ -1,12 +1,55 @@
 angular.module('wodtogether.controllers', [])
 
-.controller('LoginCtrl', function($scope, $state, API) {
+.controller('LoginCtrl', function($scope, $state, $cordovaPush, API) {
 	$scope.login = function(email, password) {
 		API.login({
 			email: email,
 			password: password
 		}).then(function(login_result) {
 			if (login_result && login_result.access_token) {
+				if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
+					// Register Device
+					var config = null;
+					
+					if (ionic.Platform.isAndroid()) {
+					    config = {
+					        "senderID": WODTogetherConfig.gcm_senderID // REPLACE THIS WITH YOURS FROM GCM CONSOLE - also in the project URL like: https://console.developers.google.com/project/434205989073
+					    };
+					} else if (ionic.Platform.isIOS()) {
+					    config = {
+					        "badge": "true",
+					        "sound": "true",
+					        "alert": "true"
+					    }
+					}
+					
+					$cordovaPush.register(config).then(function (result) {
+						console.log("Register success " + result);
+					    // ** NOTE: Android regid result comes back in the pushNotificationReceived, only iOS returned here
+					    if (ionic.Platform.isIOS()) {
+							storeDeviceToken("ios", result);
+					    }
+					}, function (err) {
+						console.log("Register error " + err)
+					});
+					
+					function storeDeviceToken(type, token) {
+						var params = {
+							method: "registerDevice",
+							regid: token,
+							type: type
+						};
+						API.post(params).then(function(response) {
+							var api_response = response.data;
+							if (api_response.response_code > 0) {
+								// device registered
+							} else {
+								// error registering device
+							}
+						});
+					}
+				}
+				
 				$state.go("app.home.wods", {}, {reload: true});
 			}
 		});
