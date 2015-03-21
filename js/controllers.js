@@ -5,8 +5,11 @@ angular.module('wodtogether.controllers', [])
 		API.login({
 			email: email,
 			password: password
-		}).then(function(login_result) {
+		}).then(function(response) {
+			var login_result = response.data;
+			console.log(login_result);
 			if (login_result && login_result.access_token) {
+				console.log("YUP");
 				if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
 					// Register Device
 					var config = null;
@@ -49,7 +52,7 @@ angular.module('wodtogether.controllers', [])
 						});
 					}
 				}
-				
+				console.log("State go app home wods");
 				$state.go("app.home.wods", {}, {reload: true});
 			}
 		});
@@ -136,23 +139,23 @@ angular.module('wodtogether.controllers', [])
 			if (api_response.response_code > 0) {
 				$scope.wodsSelect.data = api_response.data;
 				$scope.wodsSelect.empty = (api_response.data.wods.length < 1);
+				
+				var params = {
+					method: "gyms/dailyComments",
+					date: date_info.ymd,
+					gid: user_data.user.gym_id
+				};
+				API.post(params).then(function(response) {
+					var api_response = response.data;
+					if (api_response.response_code > 0) {
+						$scope.dailyComments.data = api_response.data;
+						$scope.dailyComments.count = api_response.data.comments.length;
+					} else {
+						// error fetching comments
+					}
+				});
 			} else {
 				// error fetching wods
-			}
-		});
-		
-		var params = {
-			method: "gyms/dailyComments",
-			date: date_info.ymd,
-			gid: user_data.user.gym_id
-		};
-		API.post(params).then(function(response) {
-			var api_response = response.data;
-			if (api_response.response_code > 0) {
-				$scope.dailyComments.data = api_response.data;
-				$scope.dailyComments.count = api_response.data.comments.length;
-			} else {
-				// error fetching comments
 			}
 		});
 	};
@@ -161,5 +164,28 @@ angular.module('wodtogether.controllers', [])
 		$scope.tabdate = new Date();
 		$scope.changeDate($scope.tabdate);
 	}
+	
+	$scope.new_comment = '';
+	$scope.addComment = function(new_comment) {
+		var date_info = $scope.getDateInfo($scope.tabdate);
+		
+		var params = {
+			method: "gyms/addComment",
+			date: date_info.ymd,
+			comment: new_comment,
+			gid: user_data.user.gym_id
+		};
+		
+		API.post(params).then(function(response) {
+			var api_response = response.data;
+			if (api_response.response_code > 0) {
+				$scope.dailyComments.data.comments.push(api_response.data.comment);
+				$scope.new_comment = '';
+			} else {
+				alert('test4: ' + api_response.response_code);
+				// error fetching comments
+			}
+		});
+	};
 })
 ;

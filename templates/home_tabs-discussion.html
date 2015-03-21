@@ -10,10 +10,10 @@
 		
 		<h4>Daily Discussion: {{ data.badgeCount }}</h4>
 		<div ng-repeat="comment in dailyComments.data.comments">
-			<div class="item item-thumbnail-left">
-			<img ng-src="{{comment.avatar_url}}" />
-			<b>{{comment.display_name}}</b>
-			<p>{{comment.comment}}</p>
+			<div class="item item-thumbnail-left item-text-wrap">
+				<img ng-src="{{comment.avatar_url}}" />
+				<b>{{comment.display_name}}</b>
+				<p>{{comment.comment}}</p>
 			</div>
 		</div>
 		

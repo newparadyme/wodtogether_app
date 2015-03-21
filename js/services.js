@@ -23,8 +23,15 @@ angular.module('wodtogether.services', [])
 	};
 	
 	this.getUserData = function() {
+		console.log("getUserData");
 		if (!this.user_data) {
-			this.user_data = JSON.parse(window.localStorage.getItem('user_data'));
+			var user_json = window.localStorage.getItem('user_data');
+			console.log(user_json);
+			if (!user_json || user_json == "undefined") {
+				user_data = false;
+			} else {
+				var user_data = JSON.parse(user_json);
+			}
 		}
 		
 		return this.user_data;
@@ -97,10 +104,15 @@ angular.module('wodtogether.services', [])
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			}
-		}).then(function(response) {
-			window.localStorage.setItem('user_data', JSON.stringify(response.data));
-			that.user_data = response.data;
+		}).success(function(response) {
+			window.localStorage.setItem('user_data', JSON.stringify(response));
+			that.user_data = response;
 			return response.data;
+		}).error(function(response) {
+			console.log("error logging in");
+			if (response.error_description) {
+				alert(response.error_description);
+			}
 		});
 	};
 	
