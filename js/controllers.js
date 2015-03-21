@@ -1,6 +1,25 @@
 angular.module('wodtogether.controllers', [])
 
-.controller('AppCtrl', function($scope, $state, API) {	
+.controller('LoginCtrl', function($scope, $state, API) {
+	$scope.login = function(email, password) {
+		API.login({
+			email: email,
+			password: password
+		}).then(function(login_result) {
+			if (login_result && login_result.access_token) {
+				$state.go("app.home.wods", {}, {reload: true});
+			}
+		});
+	};
+	
+	if (API.getUserData()) {
+		console.log("already logged in?");
+		$state.go("app.home.wods");
+	}
+})
+
+.controller('AppCtrl', function($scope, $state, API) {
+	
 	$scope.logout = function() {
 		console.log("logout");
 		API.logout();
@@ -37,30 +56,11 @@ angular.module('wodtogether.controllers', [])
 	};
 })
 
-.controller('LoginCtrl', function($scope, $state, API) {
-	$scope.login = function(email, password) {
-		API.login({
-			email: email,
-			password: password
-		}).then(function(login_result) {
-			if (login_result && login_result.access_token) {
-				$state.go("app.home.wods", {}, {reload: true});
-			}
-		});
-	};
-	
-	if (API.getUserData()) {
-		console.log("already logged in?");
-		$state.go("app.home.wods");
-	}
-})
-
 .controller('HomeCtrl', function($scope, $state, API) {
 	$scope.wodsSelect = {};
 	$scope.dailyComments = {};
-	$scope.getCount = function() { 
-		console.log("WTFFFFFFF");
-		return 321; 
+	$scope.getCount = function() {
+		return $scope.dailyComments.count; 
 	};
 	
 	var user_data = API.getUserData();

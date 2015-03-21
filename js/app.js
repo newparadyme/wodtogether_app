@@ -36,6 +36,7 @@ angular.module('wodtogether', ['ionic', 'wodtogether.controllers', 'wodtogether.
 		abstract: true,
 		views: {
 			'menuContent': {
+				controller: 'HomeCtrl',
 				templateUrl: "templates/home_tabs.html"
 			}
 		}
@@ -46,7 +47,6 @@ angular.module('wodtogether', ['ionic', 'wodtogether.controllers', 'wodtogether.
 		views: {
 			'home_tabs-wods': {
 				templateUrl: 'templates/home_tabs-wods.html',
-				controller: 'HomeCtrl'
 			}
 		}
 	})
@@ -56,7 +56,6 @@ angular.module('wodtogether', ['ionic', 'wodtogether.controllers', 'wodtogether.
 		views: {
 			'home_tabs-discussion': {
 				templateUrl: 'templates/home_tabs-discussion.html',
-				controller: 'HomeCtrl'
 			}
 		}
 	})
