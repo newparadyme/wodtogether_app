@@ -10,7 +10,7 @@
 		</div>
 		
 		<div class="card">
-			<div class="item item-divider">Comments <span class="badge badge-assertive">{{ dailyComments.count }}</span></div>
+			<div class="item item-divider">Comments</div>
 			<div ng-repeat="comment in dailyComments.data.comments">
 				<div class="item item-thumbnail-left item-text-wrap">
 					<img ng-src="{{comment.avatar_url}}" />
@@ -21,10 +21,10 @@
 		</div>
 
 		<div class="item item-input-inset">
-			<label for="new_comment" class="item-input-wrapper">
+			<label class="item-input-wrapper">
 				<input type="text" placeholder="Add Comments" ng-model="new_comment">
 			</label>
-			<button type="button" ng-click="addComment(new_comment)" class="button button-small button-positive icon ion-paper-airplane"> Send</button>
+			<button type="button" ng-click="addComment()" class="button button-small button-positive icon ion-paper-airplane"> Send</button>
 		</div>
 
 	</ion-content>

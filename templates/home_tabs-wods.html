@@ -9,6 +9,12 @@
 			<a class="button icon ion-calendar" ng-click="changeDate('today')"></a>
 		</div>
 
+		<div ng-show="wodsSelect.empty" class="card">
+			<div class="item">
+				<p>No WODs Posted</p>
+			</div>	
+		</div>
+				
 		<div class="card" ng-repeat="(wbid, whiteboard) in wodsSelect.data.wods">
 			<div class="item item-divider">
 				{{whiteboard.program_name}}

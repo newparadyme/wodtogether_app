@@ -106,7 +106,11 @@ angular.module('wodtogether.controllers', [])
 	$scope.wodsSelect = {};
 	$scope.dailyComments = {};
 	$scope.getCount = function() {
-		return $scope.dailyComments.count; 
+		if ($scope.dailyComments.data) {
+			return $scope.dailyComments.data.comments.length;
+		} else {
+			return 0;
+		} 
 	};
 	
 	var user_data = API.getUserData();
@@ -170,7 +174,8 @@ angular.module('wodtogether.controllers', [])
 	}
 	
 	$scope.new_comment = '';
-	$scope.addComment = function(new_comment) {
+	$scope.addComment = function() {
+		var new_comment = $scope.new_comment;
 		var date_info = $scope.getDateInfo($scope.tabdate);
 		
 		var params = {
