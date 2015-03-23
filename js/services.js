@@ -68,8 +68,8 @@ angular.module('wodtogether.services', [])
 				}
 			}).success(function(response) {
 				console.log("Refreshed, store new token data", response);
-				window.localStorage.setItem('user_data', JSON.stringify(response.data));
-				that.user_data = response.data;
+				window.localStorage.setItem('user_data', JSON.stringify(response));
+				that.user_data = response;
 				
 				return $q(function(resolve, reject) {
 					resolve(that.user_data);
