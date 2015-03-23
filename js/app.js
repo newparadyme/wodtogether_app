@@ -46,6 +46,9 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 				});
 			}
 			else if (notification.event == "message") {
+				/**
+				 * @todo if it's a new comment, go the the discussion state on the date, how can we do that?
+				 */
 				$cordovaDialogs.alert(notification.message, "Push Notification Received");
 			}
 			else if (notification.event == "error") {
@@ -139,6 +142,16 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 		views: {
 			'home_tabs-discussion': {
 				templateUrl: 'templates/home_tabs-discussion.html',
+			}
+		}
+	})
+	
+	.state('app.settings', {
+		url: "/settings",
+		views: {
+			'menuContent': {
+				controller: 'SettingsCtrl',
+				templateUrl: "templates/settings.html"
 			}
 		}
 	})

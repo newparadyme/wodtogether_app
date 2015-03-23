@@ -64,7 +64,7 @@ angular.module('wodtogether.controllers', [])
 	}
 })
 
-.controller('AppCtrl', function($scope, $state, API) {
+.controller('AppCtrl', function($scope, $state, API, $cordovaToast) {
 	
 	$scope.logout = function() {
 		console.log("logout");
@@ -196,5 +196,28 @@ angular.module('wodtogether.controllers', [])
 			}
 		});
 	};
+})
+.controller('SettingsCtrl', function($scope, $state, API) {	
+	API.post({method: "users/getAppSettings"}).then(function(response){
+		var api_response = response.data;
+		if (api_response.response_code > 0) {
+			$scope.enable_notifications = api_response.data.enable_notifications;
+		}
+	});
+	
+	$scope.saveSettings = function(enable_notifications) {
+		var params = {
+			method: "users/saveAppSettings",
+			enable_notifications: enable_notifications
+		};
+		API.post(params).then(function(response) {
+			var api_response = response.data;
+			if (api_response.response_code > 0) {
+				API.toast('all good');
+			} else {
+				API.toast('error saving settings');
+			}
+		});
+	}
 })
 ;

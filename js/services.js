@@ -22,6 +22,14 @@ angular.module('wodtogether.services', [])
 		return p.join('&');
 	};
 	
+	this.toast = function(msg) {
+		if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
+        	$cordovaToast.showShortBottom(msg);
+        } else {
+        	alert(msg);
+        }
+	}
+	
 	this.getUserData = function() {
 		console.log("getUserData");
 		if (!this.user_data) {
