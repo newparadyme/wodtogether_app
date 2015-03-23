@@ -116,12 +116,16 @@ angular.module('wodtogether.controllers', [])
 	}
 	
 	$scope.changeDate = function(direction) {
+		console.log("********CHANGE DATE********* ", direction);
 		var d = new Date($scope.tabdate);
 		if (direction == "prev") {
 			d.setDate(d.getDate() - 1);
 			date_info = $scope.getDateInfo(d);
 		} else if (direction == "next") {
 			d.setDate(d.getDate() + 1);
+			date_info = $scope.getDateInfo(d);
+		} else if (direction == "today") { 
+			d = new Date();
 			date_info = $scope.getDateInfo(d);
 		} else {
 			date_info = $scope.getDateInfo(d);

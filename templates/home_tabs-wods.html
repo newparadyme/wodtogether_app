@@ -1,12 +1,12 @@
 <ion-view view-title="WODs">
 	<ion-content class="padding">
-		
 		<div class="item item-input-inset">
 			<a class="button icon ion-chevron-left" style="margin-right: 10px;" ng-click="changeDate('prev')"></a>
 			<label class="item-input-wrapper padding">
-				<input type="date" ng-change="changeDate(tabdate)" ng-model="tabdate" placeholder="Date" />
+				{{ tabdate | date : 'mediumDate' }}
 			</label>
 			<a class="button icon ion-chevron-right" ng-click="changeDate('next')"></a>
+			<a class="button icon ion-calendar" ng-click="changeDate('today')"></a>
 		</div>
 
 		<div class="card" ng-repeat="(wbid, whiteboard) in wodsSelect.data.wods">

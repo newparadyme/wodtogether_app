@@ -1,6 +1,6 @@
 angular.module('wodtogether.services', [])
 
-.service('API', function($http, $ionicLoading, $q, $state) {
+.service('API', function($http, $ionicLoading, $q, $state, $cordovaToast) {
 	var user_json = window.localStorage.getItem('user_data');
 	if (!user_json || user_json == "undefined") {
 		user_data = false;
@@ -28,9 +28,9 @@ angular.module('wodtogether.services', [])
 			var user_json = window.localStorage.getItem('user_data');
 			console.log(user_json);
 			if (!user_json || user_json == "undefined") {
-				user_data = false;
+				this.user_data = false;
 			} else {
-				var user_data = JSON.parse(user_json);
+				this.user_data = JSON.parse(user_json);
 			}
 		}
 		
@@ -169,6 +169,9 @@ angular.module('wodtogether.services', [])
 	            
 	            $state.go("login");
 	            $ionicLoading.hide();
+	            if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
+	            	$cordovaToast.showShortBottom("Session expired");
+	            }
 	            return {data: {response_code: -999}};
 	        });
 	};

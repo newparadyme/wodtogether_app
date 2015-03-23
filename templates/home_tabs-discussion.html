@@ -3,27 +3,29 @@
 		<div class="item item-input-inset">
 			<a class="button icon ion-chevron-left" style="margin-right: 10px;" ng-click="changeDate('prev')"></a>
 			<label class="item-input-wrapper padding">
-				<input type="date" ng-change="changeDate(tabdate)" ng-model="tabdate" placeholder="Date" />
+				{{ tabdate | date : 'mediumDate' }}
 			</label>
 			<a class="button icon ion-chevron-right" ng-click="changeDate('next')"></a>
+			<a class="button icon ion-calendar" ng-click="changeDate('today')"></a>
 		</div>
 		
-		<h4>Daily Discussion: {{ data.badgeCount }}</h4>
-		<div ng-repeat="comment in dailyComments.data.comments">
-			<div class="item item-thumbnail-left item-text-wrap">
-				<img ng-src="{{comment.avatar_url}}" />
-				<b>{{comment.display_name}}</b>
-				<p>{{comment.comment}}</p>
+		<div class="card">
+			<div class="item item-divider">Comments <span class="badge badge-assertive">{{ dailyComments.count }}</span></div>
+			<div ng-repeat="comment in dailyComments.data.comments">
+				<div class="item item-thumbnail-left item-text-wrap">
+					<img ng-src="{{comment.avatar_url}}" />
+					<b>{{comment.display_name}}</b>
+					<p>{{comment.comment}}</p>
+				</div>
 			</div>
 		</div>
-		
-		<div class="list list-inset padding-top">
-			<form>
-				<label for="new_comment" class="item item-input">
-					<textarea placeholder="Comments" ng-model="new_comment"></textarea>
-				</label>
-				<button type="button" ng-click="addComment(new_comment)" class="button button-block button-balanced">Submit</button>
-			</form>
+
+		<div class="item item-input-inset">
+			<label for="new_comment" class="item-input-wrapper">
+				<input type="text" placeholder="Add Comments" ng-model="new_comment">
+			</label>
+			<button type="button" ng-click="addComment(new_comment)" class="button button-small button-positive icon ion-paper-airplane"> Send</button>
 		</div>
+
 	</ion-content>
 </ion-view>
