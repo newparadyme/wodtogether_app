@@ -98,7 +98,8 @@ angular.module('wodtogether.controllers', [])
 
 .controller('HomeCtrl', function($scope, $state, API) {
 	$scope.data =  {
-		last_updated: 0
+		last_updated: 0,
+		new_comment: ''
 	};
 	$scope.wodsSelect = {};
 	$scope.dailyComments = {};
@@ -178,9 +179,8 @@ angular.module('wodtogether.controllers', [])
 		}
 	});
 		
-	$scope.new_comment = '';
 	$scope.addComment = function() {
-		var new_comment = $scope.new_comment;
+		var new_comment = $scope.data.new_comment;
 		var date_info = $scope.getDateInfo($scope.tabdate);
 		
 		var params = {
@@ -194,7 +194,7 @@ angular.module('wodtogether.controllers', [])
 			var api_response = response.data;
 			if (api_response.response_code > 0) {
 				$scope.dailyComments.data.comments.push(api_response.data.comment);
-				$scope.new_comment = '';
+				$scope.data.new_comment = '';
 			} else {
 				alert('test4: ' + api_response.response_code);
 				// error fetching comments
