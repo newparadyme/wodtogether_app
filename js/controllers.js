@@ -7,9 +7,7 @@ angular.module('wodtogether.controllers', [])
 			password: password
 		}).then(function(response) {
 			var login_result = response.data;
-			console.log(login_result);
 			if (login_result && login_result.access_token) {
-				console.log("YUP");
 				if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
 					// Register Device
 					var config = null;
@@ -27,13 +25,12 @@ angular.module('wodtogether.controllers', [])
 					}
 					
 					$cordovaPush.register(config).then(function (result) {
-						console.log("Register success " + result);
 					    // ** NOTE: Android regid result comes back in the pushNotificationReceived, only iOS returned here
 					    if (ionic.Platform.isIOS()) {
 							storeDeviceToken("ios", result);
 					    }
 					}, function (err) {
-						console.log("Register error " + err)
+
 					});
 					
 					function storeDeviceToken(type, token) {
@@ -52,14 +49,13 @@ angular.module('wodtogether.controllers', [])
 						});
 					}
 				}
-				console.log("State go app home wods");
+
 				$state.go("app.home.wods", {}, {reload: true});
 			}
 		});
 	};
 	
 	if (API.getUserData()) {
-		console.log("already logged in?");
 		$state.go("app.home.wods");
 	}
 })
@@ -67,10 +63,8 @@ angular.module('wodtogether.controllers', [])
 .controller('AppCtrl', function($scope, $state, API, $cordovaToast) {
 	
 	$scope.logout = function() {
-		console.log("logout");
 		API.logout();
 		$state.go("login");
-		console.log("go to login");
 	};
 	
 	$scope.getDateInfo = function(d) {
@@ -103,6 +97,9 @@ angular.module('wodtogether.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, $state, API) {
+	$scope.data =  {
+		last_updated: 0
+	};
 	$scope.wodsSelect = {};
 	$scope.dailyComments = {};
 	$scope.getCount = function() {
@@ -120,7 +117,6 @@ angular.module('wodtogether.controllers', [])
 	}
 	
 	$scope.changeDate = function(direction) {
-		console.log("********CHANGE DATE********* ", direction);
 		var d = new Date($scope.tabdate);
 		if (direction == "prev") {
 			d.setDate(d.getDate() - 1);
@@ -142,7 +138,6 @@ angular.module('wodtogether.controllers', [])
 			date: date_info.ymd
 		};
 		API.post(params).then(function(response) {
-			console.log("API.post.then response: ", response);
 			var api_response = response.data;
 			if (api_response.response_code > 0) {
 				$scope.wodsSelect.data = api_response.data;
@@ -153,6 +148,8 @@ angular.module('wodtogether.controllers', [])
 					date: date_info.ymd,
 					gid: user_data.user.gym_id
 				};
+
+				$scope.data.last_updated = Date.now() / 1000;
 				API.post(params).then(function(response) {
 					var api_response = response.data;
 					if (api_response.response_code > 0) {
@@ -168,11 +165,19 @@ angular.module('wodtogether.controllers', [])
 		});
 	};
 	
-	if ($scope.tabdate == "today" || !$scope.tabdate) {
-		$scope.tabdate = new Date();
-		$scope.changeDate($scope.tabdate);
-	}
-	
+	$scope.$on('$ionicView.enter', function(){
+		if ($scope.tabdate == "today" || !$scope.tabdate) {
+			$scope.tabdate = new Date();
+			$scope.changeDate($scope.tabdate);
+		} else {
+			var update_threshold = (Date.now() / 1000) - 15; // fetch data if it hasn't been updated in the last 15 seconds
+			if ($scope.data.last_updated < update_threshold) {
+				$scope.changeDate(false);
+			}
+			
+		}
+	});
+		
 	$scope.new_comment = '';
 	$scope.addComment = function() {
 		var new_comment = $scope.new_comment;

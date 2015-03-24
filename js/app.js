@@ -16,7 +16,6 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 		// handle push notifications
 		// Notification Received
 		$rootScope.$on('$cordovaPush:notificationReceived', function (event, notification) {
-			console.log(JSON.stringify([notification]));
 			if (ionic.Platform.isAndroid()) {
 				handleAndroid(notification);
 			}
