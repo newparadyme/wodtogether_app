@@ -1,12 +1,27 @@
 
 angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 'wodtogether.services'])
 
-.run(function($ionicPlatform, $rootScope, $cordovaPush, $cordovaDialogs, API) {
+.run(function($ionicPlatform, $rootScope, $cordovaPush, $cordovaDialogs, $cordovaAppVersion, API) {
+	// @todo call API to get latest app version and compare to WODTogetherConfig.version, show dialog for update. only check once a day?
+	/*
+	 * if window.localStorage.getItem('last_version_check'); < 24 hours ago, call version check api
+	 * if new version is available show a dialog informing the user they should update
+	 * window.localStorage.setItem(); update last_version_check timestamp
+	*/
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
-		if (window.cordova && window.cordova.plugins.Keyboard) {
-			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+		$rootScope.wodtogether_version = "0.0.0";
+		if (window.cordova) {
+			if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
+				$cordovaAppVersion.getAppVersion().then(function (version) {
+					$rootScope.wodtogether_version = version;
+				});
+			}
+			
+			if (window.cordova.plugins.Keyboard) {
+				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+			}
 		}
 		if (window.StatusBar) {
 			// org.apache.cordova.statusbar required
@@ -46,7 +61,7 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 			}
 			else if (notification.event == "message") {
 				/**
-				 * @todo if it's a new comment, go the the discussion state on the date, how can we do that?
+				 * @todo if it's a new comment for the current date, update the data?
 				 */
 				$cordovaDialogs.alert(notification.message, "Push Notification Received");
 			}

@@ -60,8 +60,7 @@ angular.module('wodtogether.controllers', [])
 	}
 })
 
-.controller('AppCtrl', function($scope, $state, API, $cordovaToast) {
-	
+.controller('AppCtrl', function($scope, $state, API) {
 	$scope.logout = function() {
 		API.logout();
 		$state.go("login");
