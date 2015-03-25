@@ -105,6 +105,10 @@ angular.module('wodtogether.services', [])
 		user.grant_type = "password";
 		user.username = user.email;
 		
+		$ionicLoading.show({
+			template: '<ion-spinner></ion-spinner>'
+	    });
+		
 		return $http({
 			method: "POST",
 			url: API_ENDPOINT + "token.php",
@@ -113,10 +117,12 @@ angular.module('wodtogether.services', [])
 				"Content-Type": "application/x-www-form-urlencoded"
 			}
 		}).success(function(response) {
+			$ionicLoading.hide();
 			window.localStorage.setItem('user_data', JSON.stringify(response));
 			that.user_data = response;
 			return response.data;
 		}).error(function(response) {
+			$ionicLoading.hide();
 			console.log("error logging in");
 			if (response.error_description) {
 				alert(response.error_description);
