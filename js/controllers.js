@@ -158,12 +158,17 @@ angular.module('wodtogether.controllers', [])
 		});
 	};
 	
-	$scope.$on('$ionicView.enter', function(){
+	$scope.$on('$ionicView.enter', function(a,b) {
 		if ($scope.tabdate == "today" || !$scope.tabdate) {
 			$scope.tabdate = new Date();
 			$scope.changeDate($scope.tabdate);
 		} else {
-			var update_threshold = (Date.now() / 1000) - 15; // fetch data if it hasn't been updated in the last 15 seconds
+			if (b.stateId == 'app.home.discussion') {
+				var update_threshold = (Date.now() / 1000) - 15; // fetch data if it hasn't been updated in the last 15 seconds
+			} else {
+				var update_threshold = (Date.now() / 1000) - 300; // fetch data if it hasn't been updated in the last 5 minutes
+			}
+			
 			if ($scope.data.last_updated < update_threshold) {
 				$scope.changeDate(false);
 			}
