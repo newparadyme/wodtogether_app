@@ -102,9 +102,11 @@ angular.module('wodtogether.controllers', [])
 	};
 	$scope.wodsSelect = {};
 	$scope.dailyComments = {};
+	$scope.schedule = {};
+	
 	$scope.getCount = function() {
 		if ($scope.dailyComments.data) {
-			return $scope.dailyComments.data.comments.length;
+			return $scope.dailyComments.data.length;
 		} else {
 			return 0;
 		} 
@@ -134,31 +136,22 @@ angular.module('wodtogether.controllers', [])
 		$scope.tabdate = d;
 
 		var params = {
-			method: "wodsSelect",
-			date: date_info.ymd
+			method: "getDailyData",
+			date: date_info.ymd,
+			gid: user_data.user.gym_id
 		};
 		API.post(params).then(function(response) {
 			var api_response = response.data;
 			if (api_response.response_code > 0) {
-				$scope.wodsSelect.data = api_response.data;
+				$scope.wodsSelect.data = api_response.data.wods;
 				$scope.wodsSelect.empty = (api_response.data.wods.length < 1);
 				
-				var params = {
-					method: "gyms/dailyComments",
-					date: date_info.ymd,
-					gid: user_data.user.gym_id
-				};
-
+				$scope.dailyComments.data = api_response.data.comments;
+				$scope.dailyComments.count = api_response.data.comments.length;
+				
+				$scope.schedule.data = api_response.data.daily_schedule;
+				
 				$scope.data.last_updated = Date.now() / 1000;
-				API.post(params).then(function(response) {
-					var api_response = response.data;
-					if (api_response.response_code > 0) {
-						$scope.dailyComments.data = api_response.data;
-						$scope.dailyComments.count = api_response.data.comments.length;
-					} else {
-						// error fetching comments
-					}
-				});
 			} else {
 				// error fetching wods
 			}
@@ -192,7 +185,7 @@ angular.module('wodtogether.controllers', [])
 		API.post(params).then(function(response) {
 			var api_response = response.data;
 			if (api_response.response_code > 0) {
-				$scope.dailyComments.data.comments.push(api_response.data.comment);
+				$scope.dailyComments.data.push(api_response.data.comment);
 				$scope.data.new_comment = '';
 			} else {
 				alert('test4: ' + api_response.response_code);

@@ -1,0 +1,21 @@
+<ion-view view-title="Schedule">
+	<ion-content class="padding">
+		<div class="item item-input-inset">
+			<a class="button icon ion-chevron-left" style="margin-right: 10px;" ng-click="changeDate('prev')"></a>
+			<label class="item-input-wrapper padding">
+				{{ tabdate | date : 'EEE, MMM d' }}
+			</label>
+			<a class="button icon ion-chevron-right" ng-click="changeDate('next')"></a>
+			<a class="button icon ion-calendar" ng-click="changeDate('today')"></a>
+		</div>
+		<br />
+		<div class="list">
+			<div ng-repeat="class_time in schedule.data">
+				<div class="item" ng-repeat="class_details in class_time">
+					{{ class_details.class_time_12 }} <span ng-if="class_details.cancelled"><b class="assertive">cancelled</b></span> - {{ class_details.program_name }} 
+				</div>			
+			</div>
+
+		</div>
+	</ion-content>
+</ion-view>

@@ -2,12 +2,6 @@
 angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 'wodtogether.services'])
 
 .run(function($ionicPlatform, $rootScope, $cordovaPush, $cordovaDialogs, $cordovaAppVersion, API) {
-	// @todo call API to get latest app version and compare to WODTogetherConfig.version, show dialog for update. only check once a day?
-	/*
-	 * if window.localStorage.getItem('last_version_check'); < 24 hours ago, call version check api
-	 * if new version is available show a dialog informing the user they should update
-	 * window.localStorage.setItem(); update last_version_check timestamp
-	*/
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
@@ -16,6 +10,7 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 			if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
 				$cordovaAppVersion.getAppVersion().then(function (version) {
 					$rootScope.wodtogether_version = version;
+					// @todo call API to get latest version to compare against 
 				});
 			}
 			
@@ -156,6 +151,14 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 		views: {
 			'home_tabs-discussion': {
 				templateUrl: 'templates/home_tabs-discussion.html',
+			}
+		}
+	})
+	.state('app.home.schedule', {
+		url: "/schedule",
+		views: {
+			'home_tabs-schedule': {
+				templateUrl: 'templates/home_tabs-schedule.html',
 			}
 		}
 	})
