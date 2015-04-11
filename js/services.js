@@ -45,6 +45,46 @@ angular.module('wodtogether.services', [])
 		return this.user_data;
 	}
 	
+	this.login = function(user) {
+		var that = this;
+		user.client_id = WODTogetherConfig.api.client_id; 
+		user.client_secret = WODTogetherConfig.api.client_secret;
+		user.grant_type = "password";
+		user.username = user.email;
+		
+		$ionicLoading.show({
+			template: '<ion-spinner></ion-spinner>'
+	    });
+		
+		return $http({
+			method: "POST",
+			url: API_ENDPOINT + "token.php",
+			data: this.toParams(user),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		}).success(function(response) {
+			$ionicLoading.hide();
+			window.localStorage.setItem('user_data', JSON.stringify(response));
+			that.user_data = response;
+			return response.data;
+		}).error(function(response) {
+			$ionicLoading.hide();
+			console.log("error logging in");
+			if (response.error_description) {
+				alert(response.error_description);
+			}
+		});
+	};
+	
+	this.logout = function() {
+		// remove localstorage
+		window.localStorage.removeItem('user_data');
+		this.user_data = false;
+		console.log("all clear?");
+		// @todo .clear()???
+	};
+	
 	this.check = function() {
 		var that = this;
 		console.log("Session.check");
@@ -98,46 +138,6 @@ angular.module('wodtogether.services', [])
 		});
 	};
 	
-	this.login = function(user) {
-		var that = this;
-		user.client_id = WODTogetherConfig.api.client_id; 
-		user.client_secret = WODTogetherConfig.api.client_secret;
-		user.grant_type = "password";
-		user.username = user.email;
-		
-		$ionicLoading.show({
-			template: '<ion-spinner></ion-spinner>'
-	    });
-		
-		return $http({
-			method: "POST",
-			url: API_ENDPOINT + "token.php",
-			data: this.toParams(user),
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-			}
-		}).success(function(response) {
-			$ionicLoading.hide();
-			window.localStorage.setItem('user_data', JSON.stringify(response));
-			that.user_data = response;
-			return response.data;
-		}).error(function(response) {
-			$ionicLoading.hide();
-			console.log("error logging in");
-			if (response.error_description) {
-				alert(response.error_description);
-			}
-		});
-	};
-	
-	this.logout = function() {
-		// remove localstorage
-		window.localStorage.removeItem('user_data');
-		this.user_data = false;
-		console.log("all clear?");
-		// @todo .clear()???
-	};
-	
 	this.post = function(params) {
 		console.log("API post");
 		var that = this;
@@ -170,6 +170,7 @@ angular.module('wodtogether.services', [])
 						return response.data;
 					})
 					.error(function(e) {
+						// if we get a 401, error expired_token, get a new one and try again?
 						console.log(e);
 						$ionicLoading.hide();
 						return {data: {response_code: -997}};
@@ -179,12 +180,13 @@ angular.module('wodtogether.services', [])
 	                return {data: {response_code: -998}};
 	            }
 	        }, function(error) {
+	        	// double check session?
 	            console.log("error", error);
 	            
 	            $state.go("login");
 	            $ionicLoading.hide();
 	            if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
-	            	$cordovaToast.showShortBottom("Session expired");
+	            	$cordovaToast.showShortBottom(error);
 	            }
 	            return {data: {response_code: -999}};
 	        });

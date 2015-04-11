@@ -1,6 +1,7 @@
 angular.module('wodtogether.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state, $cordovaPush, API) {
+	$scope.endpoint = API_ENDPOINT;
 	$scope.login = function(email, password) {
 		API.login({
 			email: email,
