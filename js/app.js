@@ -10,7 +10,7 @@ angular.module('wodtogether', ['ionic', 'ngCordova', 'wodtogether.controllers', 
 			if (ionic.Platform.isAndroid() || ionic.Platform.isIOS()) {
 				$cordovaAppVersion.getAppVersion().then(function (version) {
 					$rootScope.wodtogether_version = version;
-					// @todo call API to get latest version to compare against 
+					// @todo call API to get latest version to compare against to prompt to update
 				});
 			}
 			
